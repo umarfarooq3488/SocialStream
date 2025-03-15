@@ -1,10 +1,16 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
+import { createRoot } from "react-dom/client";
 import "./index.css";
-ReactDOM.render(
+import AppRoutes from "./routes/route";
+import { UserProvider } from "./context/userContext";
+
+const container = document.getElementById("root");
+const root = createRoot(container);
+
+root.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById("root")
+    <UserProvider>
+      <AppRoutes />
+    </UserProvider>
+  </React.StrictMode>
 );
