@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Camera, Upload } from "lucide-react";
-import { UserContext } from "../context/userContext";
+import { useUser } from "../context/UserContext";
 import { registerUser } from "../api/Api";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -15,7 +15,7 @@ const Signup = () => {
     coverImage: "",
   });
 
-  const { state, dispatch } = useContext(UserContext);
+  const { state, dispatch } = useUser();
   const navigate = useNavigate();
 
   const [avatarPreview, setAvatarPreview] = useState(null);

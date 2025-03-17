@@ -1,8 +1,13 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { User, Mail, Lock } from "lucide-react";
+import { loginUser } from "../api/Api";
+import { toast, Toaster } from "react-hot-toast";
+import { useUser } from "../context/UserContext";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { state, dispatch } = useUser();
   const [formData, setFormData] = useState({
     userName: "",
     email: "",
@@ -16,10 +21,21 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log(formData);
+    dispatch({ type: "LOGIN_REQUEST" });
+    try {
+      const userData = await loginUser(formData);
+      dispatch({ type: "LOGIN_SUCCESS", payload: userData });
+      toast.success(`Success! Welcome ${userData.data.fullName}`);
+      setTimeout(() => {
+        navigate("/home", { replace: true });
+      }, 2000);
+    } catch (error) {
+      dispatch({ type: "LOGIN_FAILED", payload: error });
+      toast.error(`Error! ${error.message}`);
+    }
+    // console.log(formData);
   };
 
   // Required field indicator component
@@ -27,6 +43,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-indigo-100 p-6">
+      <Toaster />
       <div className="bg-white rounded-xl shadow-md w-full max-w-md border border-gray-100 p-8">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-gray-800">Social Stream</h1>

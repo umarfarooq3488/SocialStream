@@ -5,31 +5,25 @@ import Signup from "../components/Signup";
 import Login from "../components/Login";
 import Home from "../Home";
 import ProtectedRoute from "./ProtectedRoute";
-
-// Example authentication status (replace with real authentication logic)
-const isAuthenticated = false;
+import { useUser } from "../context/UserContext";
 
 const AppRoutes = () => {
-  const routes = [
-    { path: "/", element: <LandingPage /> },
-    { path: "/signup", element: <Signup /> },
-    { path: "/login", element: <Login /> },
-    {
-      path: "/home",
-      element: (
-        <ProtectedRoute isAuthenticated={isAuthenticated}>
-          <Home />
-        </ProtectedRoute>
-      ),
-    },
-  ];
+  const { state } = useUser();
 
   return (
     <Router>
       <Routes>
-        {routes.map((route, index) => (
-          <Route key={index} path={route.path} element={route.element} />
-        ))}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute isAuthenticated={state.isAuthenticated}>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );
