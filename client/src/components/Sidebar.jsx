@@ -1,5 +1,6 @@
 // Sidebar.jsx
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Home,
   Compass,
@@ -13,15 +14,37 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import { useUser } from "../context/UserContext";
 
 const Sidebar = () => {
   const [expanded, setExpanded] = useState(true);
+  const { state } = useUser();
 
   const mainMenuItems = [
-    { icon: <Home size={20} />, label: "Home", notifications: 0 },
-    { icon: <Compass size={20} />, label: "Discover", notifications: 5 },
-    { icon: <Film size={20} />, label: "Shorts", notifications: 0 },
-    { icon: <Users size={20} />, label: "Following", notifications: 2 },
+    {
+      icon: <Home size={20} />,
+      label: "Home",
+      notifications: 0,
+      path: "/home",
+    },
+    {
+      icon: <Compass size={20} />,
+      label: "My Channel",
+      notifications: 5,
+      path: `/channel-details/${state?.user?.data?.user?.userName}`, // Added optional chaining
+    },
+    {
+      icon: <Film size={20} />,
+      label: "Upload Video",
+      notifications: 0,
+      path: "/upload-video",
+    },
+    {
+      icon: <Users size={20} />,
+      label: "Following",
+      notifications: 2,
+      path: null,
+    },
   ];
 
   const libraryItems = [
@@ -41,7 +64,7 @@ const Sidebar = () => {
 
   return (
     <aside
-      className={`h-screen ${expanded ? "w-64" : "w-20"} 
+      className={`h-screen ${expanded ? "w-64" : "w-[20vw]"} 
       bg-gradient-to-b from-gray-50 to-gray-100 
       dark:from-gray-900 dark:to-gray-950 
       shadow-lg transition-all duration-300 flex flex-col
@@ -82,15 +105,16 @@ const Sidebar = () => {
       <div className="overflow-y-auto flex-grow scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
         <div className="px-3 py-4">
           {mainMenuItems.map((item, index) => (
-            <div
+            <Link
+              to={item.path}
               key={index}
               className={`flex items-center px-3 py-3 my-1 text-gray-700 dark:text-gray-300 
-                ${
-                  index === 0
-                    ? "bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 border-l-4 border-indigo-500 dark:border-indigo-400"
-                    : "hover:bg-gray-200/50 dark:hover:bg-gray-800/50"
-                } 
-                rounded-lg cursor-pointer transition-all`}
+      ${
+        index === 0
+          ? "bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 border-l-4 border-indigo-500 dark:border-indigo-400"
+          : "hover:bg-gray-200/50 dark:hover:bg-gray-800/50"
+      } 
+      rounded-lg cursor-pointer transition-all`}
             >
               <div
                 className={`${
@@ -118,7 +142,7 @@ const Sidebar = () => {
                   )}
                 </>
               )}
-            </div>
+            </Link>
           ))}
         </div>
 

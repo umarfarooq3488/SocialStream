@@ -5,8 +5,7 @@ import HomeContent from "./components/HomeContent";
 const Home = () => {
   return (
     <>
-      <div className="flex h-[96vh]">
-        <Sidebar />
+      <div className="h-[96vh]">
         <HomeContent />
       </div>
       ;
