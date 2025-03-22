@@ -17,7 +17,7 @@ router.route("/refresh-token").post(refreshAccessToken)
 
 // secure routes
 router.route("/logout").post(verifyJWT, userLogout)
-router.route("/update-profile").patch(verifyJWT, updateUserDetails)
+router.route("/update").patch(verifyJWT, updateUserDetails)
 router.route("/avatar").patch(verifyJWT, upload.single("avatar"), updateUserAvatar)
 router.route("/cover-image").patch(verifyJWT, upload.single("coverImage"), updateUserCoverImage)
 router.route("/update-password").post(verifyJWT, updateUserPassword)

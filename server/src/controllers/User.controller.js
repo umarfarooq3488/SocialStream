@@ -178,10 +178,15 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 })
 
 const updateUserDetails = asyncHandler(async (req, res) => {
+    console.log("Body data", req.body);
+    console.log("User from token", req.user)
     const { fullName, email } = req.body;
 
     if (!fullName || !email) {
         throw new ApiError(401, "FullName and Email are required")
+    }
+    if (!req.user._id) {
+        throw new ApiError(401, "User id not found")
     }
 
     const user = await User.findByIdAndUpdate(req.user?._id, {

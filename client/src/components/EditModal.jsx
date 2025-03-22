@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { UpdateChannelDetails } from "../api/Api";
+import { UpdateChannelDetails } from "../api/UserApi";
 import toast from "react-hot-toast";
 
 const EditModal = ({ isModalOpen, formData, setFormData, setIsModalOpen }) => {
@@ -13,11 +13,17 @@ const EditModal = ({ isModalOpen, formData, setFormData, setIsModalOpen }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const updateData = {
+      email: formData.email,
+      fullName: formData.fullName,
+    };
     try {
-      await UpdateChannelDetails(formData);
+      await UpdateChannelDetails(updateData);
       toast.success("Profile Details updated successfully!");
+      setIsModalOpen(false);
     } catch (error) {
       toast.error("Error in updating the profile");
+      console.error("Update err", error);
     }
 
     setIsModalOpen(false);

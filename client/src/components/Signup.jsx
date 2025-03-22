@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Camera, Upload } from "lucide-react";
 import { useUser } from "../context/UserContext";
-import { registerUser } from "../api/Api";
+import { registerUser } from "../api/UserApi";
 import toast, { Toaster } from "react-hot-toast";
 
 const Signup = () => {

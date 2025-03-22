@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
-import { channelDetails } from "../api/Api";
+import { channelDetails } from "../api/UserApi";
 import { Sidebar } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import UserProfile from "./UserProfile";

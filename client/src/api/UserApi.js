@@ -48,14 +48,29 @@ export const channelDetails = async (userName) => {
 };
 export const UpdateChannelDetails = async (formData) => {
     try {
+        // Get access token from localStorage
+        const token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).data.accessToken : null;
 
-        const response = await axios.put(`${API_URL}/users/update-profile`, formData);
+        if (!token) {
+            throw new Error('Authentication token not found');
+        }
+
+        const response = await axios.patch(
+            `${API_URL}/users/update`,
+            formData,
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
         return response.data;
     } catch (error) {
         if (error.response && error.response.data) {
             throw new Error(error.response.data.message);
         } else {
-            throw new Error('Failed to fetch channel details');
+            throw new Error('Failed to update profile details');
         }
     }
 };

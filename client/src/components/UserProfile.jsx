@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import EditModal from "./EditModal";
 
-const UserProfile = ({ channelData, onUpdateProfile }) => {
+const UserProfile = ({ channelData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     fullName: channelData.fullName,
