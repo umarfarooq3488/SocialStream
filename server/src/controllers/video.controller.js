@@ -2,43 +2,39 @@ import asyncHandler from "../utils/asyncHandler.js"
 import { Video } from "../models/Video.model.js"
 import { ApiError } from "../utils/ApiErrors.js";
 import { ApiResponse } from "../utils/ApiResponse.js"
-import uploadFileOnCloudinary from "../utils/Cloudinary.js";
-
+import { uploadFileOnCloudinary } from "../utils/Cloudinary.js";
 
 const uploadVideo = asyncHandler(async (req, res) => {
     const { title, description, duration } = req.body;
-    if ([title, description, duration].some(field => field.trim() === "")) {
-        throw new ApiError(401, "All fields are required")
+
+    console.log("body data", req.body)
+    console.log("Files", req.files);
+    if (!req.files?.videoFile?.[0] || !req.files?.thumbnail?.[0]) {
+        throw new ApiError(400, "Video and thumbnail are required");
     }
-    const thumbnailLocalPath = req.files.thumbnail[0]?.path;
-    const videoLocalPath = req.files.videoFile[0]?.path;
 
-    if (!thumbnailLocalPath) {
-        throw new ApiError("Please upload the thumbnail")
+    // Upload both files concurrently
+    const [videoResult, thumbnailResult] = await Promise.all([
+        uploadFileOnCloudinary(req.files.videoFile[0].buffer, "video"),
+        uploadFileOnCloudinary(req.files.thumbnail[0].buffer, "image")
+    ]);
+
+    if (!videoResult || !thumbnailResult) {
+        throw new ApiError(500, "Error uploading files to cloud");
     }
-    if (!videoLocalPath) {
-        throw new ApiError("Please upload the video file")
-    }
-    const thumbnail = await uploadFileOnCloudinary(thumbnailLocalPath);
-    const video = await uploadFileOnCloudinary(videoLocalPath);
 
-    // const user = await User.findById(req.user?._id).select("-password -refreshToken");
+    const video = await Video.create({
+        title,
+        description,
+        duration,
+        videoFile: videoResult.secure_url,
+        thumbnail: thumbnailResult.secure_url,
+        owner: req.user._id
+    });
 
-    const uploadedVideo = await Video.create({
-        title: title,
-        description: description,
-        duration: duration,
-        owner: req.user?._id,
-        videoFile: video.url,
-        thumbnail: thumbnail.url,
-        views: 0,
-        isPublished: true
-    })
-
-
-    res.status(200).json(
-        new ApiResponse(200, uploadedVideo, "Video is uploaded")
-    )
+    return res.status(201).json(
+        new ApiResponse(201, video, "Video uploaded successfully")
+    );
 })
 
 const getVideoDetails = asyncHandler(async (req, res) => {

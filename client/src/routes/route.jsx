@@ -8,6 +8,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import { useUser } from "../context/UserContext";
 import ChannelDetails from "../components/ChannelDetails";
 import MainLayout from "../layouts/MainLayout";
+import UploadVideo from "../components/UploadVideo";
 
 const AppRoutes = () => {
   const { state } = useUser();
@@ -30,6 +31,7 @@ const AppRoutes = () => {
             path="/channel-details/:userName"
             element={<ChannelDetails />}
           />
+          <Route path="/upload-video" element={<UploadVideo />} />
         </Route>
       </Routes>
     </Router>
