@@ -15,90 +15,26 @@ import {
 import Video from "./Video";
 import { useVideo } from "../context/VideosContext";
 import { retrieveVideos } from "../api/VideoApi";
+import toast, { Toaster } from "react-hot-toast";
 
 const HomeContent = () => {
   const { state, dispatch } = useVideo();
-  // Mock data for videos
-  const videos = [
-    {
-      id: 1,
-      thumbnail: "/api/placeholder/320/180",
-      title: "Building a Responsive Dashboard with React and Tailwind",
-      channel: "DevMastery",
-      views: "1.2M views",
-      posted: "3 days ago",
-      duration: "10:43",
-      avatar: "💻",
-      trending: true,
-    },
-    {
-      id: 2,
-      thumbnail: "/api/placeholder/320/180",
-      title: "How Top Performers Structure Their Morning Routine",
-      channel: "Lifestyle Guide",
-      views: "890K views",
-      posted: "1 week ago",
-      duration: "15:21",
-      avatar: "🌞",
-      trending: false,
-    },
-    {
-      id: 3,
-      thumbnail: "/api/placeholder/320/180",
-      title: "Advanced Tailwind CSS Techniques You Need to Know",
-      channel: "CSS Wizards",
-      views: "500K views",
-      posted: "2 weeks ago",
-      duration: "22:07",
-      avatar: "🎨",
-      trending: false,
-    },
-    {
-      id: 4,
-      thumbnail: "/api/placeholder/320/180",
-      title: "The Secrets of Icelands Volcanic Landscapes",
-      channel: "Nature Explorers",
-      views: "2.5M views",
-      posted: "1 month ago",
-      duration: "18:32",
-      avatar: "🔬",
-      trending: true,
-    },
-    {
-      id: 5,
-      thumbnail: "/api/placeholder/320/180",
-      title: "No-Equipment HIIT Workout for Beginners",
-      channel: "Fitness Pro",
-      views: "3.1M views",
-      posted: "2 months ago",
-      duration: "15:00",
-      avatar: "💪",
-      trending: false,
-    },
-    {
-      id: 6,
-      thumbnail: "/api/placeholder/320/180",
-      title: "Making Artisan Sourdough Bread from Scratch",
-      channel: "Baking Masters",
-      views: "1.7M views",
-      posted: "3 weeks ago",
-      duration: "12:45",
-      avatar: "🍰",
-      trending: false,
-    },
-  ];
 
   useEffect(() => {
     const getVideos = async () => {
+      const toastID = toast.loading("Loading");
       try {
         dispatch({ type: "VIDEOS_REQUEST" });
         const response = await retrieveVideos();
         if (response) {
           dispatch({ type: "VIDEOS_SUCCESS", payload: response });
         }
+        toast.dismiss(toastID);
       } catch (error) {
         console.log("Error occurred while fetching videos!", error);
         dispatch({ type: "VIDEOS_ERROR", payload: error });
+      } finally {
+        toast.dismiss(toastID);
       }
     };
     getVideos();
@@ -119,11 +55,12 @@ const HomeContent = () => {
   ];
 
   const [activeCategory, setActiveCategory] = useState("For You");
-  if (state.loading) return <div>Loading videos...</div>;
-  if (state.error) return <div>Error: {state.error}</div>;
+  // if (state.loading) return toast.loading("Loading Data");
+  // if (state.error) return toast.error("Error while fetching videos");
 
   return (
     <div className="flex-1 h-screen bg-gray-50 dark:bg-gray-950 overflow-auto">
+      <Toaster />
       {/* Header */}
       <header className="sticky top-0 z-10 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 px-6 py-4">
         <div className="flex items-center justify-between gap-4">
