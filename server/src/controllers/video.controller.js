@@ -38,11 +38,11 @@ const uploadVideo = asyncHandler(async (req, res) => {
 })
 
 const getVideoDetails = asyncHandler(async (req, res) => {
-    const { videoId } = req.params;
-    if (!videoId) {
+    const { id } = req.params;
+    if (!id) {
         throw new ApiError(401, "video id is not available")
     }
-    const video = await Video.findById(videoId).populate("owner", "userName fullName avatar");
+    const video = await Video.findById(id).populate("owner", "userName fullName avatar");
     if (!video) {
         throw new ApiError(401, "Couldn't fetch the video with the given id")
     }

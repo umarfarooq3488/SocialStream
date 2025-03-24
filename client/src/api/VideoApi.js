@@ -38,11 +38,37 @@ export const uploadVideo = async (uploadData, onProgress) => {
 };
 export const retrieveVideos = async () => {
     try {
-        const response = await axios.post(
-            `${API_URL}/videos/upload`,
-            formData
+        const token = localStorage.getItem('user')
+            ? JSON.parse(localStorage.getItem('user')).data.accessToken
+            : null;
+        const response = await axios.get(
+            `${API_URL}/videos/all-videos`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        }
         );
-        return response.data;
+        return response.data.data;
+    } catch (error) {
+        throw error.response?.data || error.message;
+    }
+};
+
+export const getVideoDetails = async (videoId) => {
+    if (!videoId) {
+        console.log("No video id")
+    }
+    try {
+        const token = localStorage.getItem('user')
+            ? JSON.parse(localStorage.getItem('user')).data.accessToken
+            : null;
+
+        const response = await axios.get(`${API_URL}/videos/details/${videoId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data.data;
     } catch (error) {
         throw error.response?.data || error.message;
     }

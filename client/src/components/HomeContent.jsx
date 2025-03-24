@@ -1,5 +1,6 @@
 // HomeContent.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   Search,
   Bell,
@@ -12,8 +13,11 @@ import {
   Clock,
 } from "lucide-react";
 import Video from "./Video";
+import { useVideo } from "../context/VideosContext";
+import { retrieveVideos } from "../api/VideoApi";
 
 const HomeContent = () => {
+  const { state, dispatch } = useVideo();
   // Mock data for videos
   const videos = [
     {
@@ -84,6 +88,22 @@ const HomeContent = () => {
     },
   ];
 
+  useEffect(() => {
+    const getVideos = async () => {
+      try {
+        dispatch({ type: "VIDEOS_REQUEST" });
+        const response = await retrieveVideos();
+        if (response) {
+          dispatch({ type: "VIDEOS_SUCCESS", payload: response });
+        }
+      } catch (error) {
+        console.log("Error occurred while fetching videos!", error);
+        dispatch({ type: "VIDEOS_ERROR", payload: error });
+      }
+    };
+    getVideos();
+  }, []);
+
   // Categories for filter
   const categories = [
     "For You",
@@ -99,6 +119,8 @@ const HomeContent = () => {
   ];
 
   const [activeCategory, setActiveCategory] = useState("For You");
+  if (state.loading) return <div>Loading videos...</div>;
+  if (state.error) return <div>Error: {state.error}</div>;
 
   return (
     <div className="flex-1 h-screen bg-gray-50 dark:bg-gray-950 overflow-auto">
@@ -164,11 +186,15 @@ const HomeContent = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {videos
-            .filter((video) => !video.trending)
-            .map((video) => (
-              <Video video={video} key={video.id} />
-            ))}
+          {state.videos && state.videos.length > 0 ? (
+            state.videos.map((video) => (
+              <Link to={`/video-details/${video._id}`} key={video._id}>
+                <Video key={video._id} video={video} />
+              </Link>
+            ))
+          ) : (
+            <div>No videos available</div>
+          )}
         </div>
       </div>
     </div>

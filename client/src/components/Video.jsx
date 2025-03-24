@@ -1,22 +1,21 @@
 import React from "react";
-import {
-  Search,
-  Bell,
-  User,
-  ThumbsUp,
-  MessageCircle,
-  Share2,
-  Bookmark,
-  Filter,
-  Clock,
-} from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 
 const Video = ({ video }) => {
+  const formatTimeAgo = (dateString) => {
+    try {
+      const date = new Date(dateString);
+      return formatDistanceToNow(date, { addSuffix: true });
+    } catch (error) {
+      return "Invalid date";
+    }
+  };
+
   return (
     <div>
       <div
-        key={video.id}
-        className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-gray-100 dark:border-gray-700 hover:border-indigo-200 dark:hover:border-indigo-700 group"
+        key={video._id}
+        className="bg-white cursor-pointer hover:scale-105 dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-500 border border-gray-100 dark:border-gray-700 hover:border-indigo-200 dark:hover:border-indigo-700 group"
       >
         <div className="relative">
           <img
@@ -31,17 +30,21 @@ const Video = ({ video }) => {
         <div className="p-4">
           <div className="flex space-x-3">
             <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center">
-              {video.avatar}
+              <img
+                src={video.owner.avatar}
+                alt={video.owner.fullName}
+                className="w-full rounded-lg h-full object-cover"
+              />
             </div>
             <div>
               <h3 className="font-medium text-gray-800 dark:text-gray-100 line-clamp-2">
                 {video.title}
               </h3>
               <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
-                {video.channel}
+                {video.owner.fullName}
               </p>
               <p className="text-gray-500 dark:text-gray-500 text-xs mt-1">
-                {video.views} • {video.posted}
+                {video.views} • {formatTimeAgo(video.createdAt)}
               </p>
             </div>
           </div>
