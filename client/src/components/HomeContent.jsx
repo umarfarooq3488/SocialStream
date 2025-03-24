@@ -11,6 +11,7 @@ import {
   Filter,
   Clock,
 } from "lucide-react";
+import Video from "./Video";
 
 const HomeContent = () => {
   // Mock data for videos
@@ -150,80 +151,6 @@ const HomeContent = () => {
         </div>
       </div>
 
-      {/* Trending Section */}
-      <div className="px-6 py-2">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
-            {/* <Trending size={20} className="text-indigo-500" /> */}
-            Trending Now
-          </h2>
-          <button className="text-sm text-indigo-500 hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-300">
-            See all
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {videos
-            .filter((video) => video.trending)
-            .map((video) => (
-              <div
-                key={video.id}
-                className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-gray-100 dark:border-gray-700 hover:border-indigo-200 dark:hover:border-indigo-700 group"
-              >
-                <div className="relative">
-                  <img
-                    src={video.thumbnail}
-                    alt={video.title}
-                    className="w-full h-48 object-cover"
-                  />
-                  <span className="absolute bottom-2 right-2 bg-black/70 backdrop-blur-sm text-white text-xs px-1.5 py-0.5 rounded">
-                    {video.duration}
-                  </span>
-                  <div className="absolute top-2 left-2 bg-indigo-500 text-white text-xs px-2 py-1 rounded-lg">
-                    Trending
-                  </div>
-                </div>
-                <div className="p-4">
-                  <div className="flex space-x-3">
-                    <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center">
-                      {video.avatar}
-                    </div>
-                    <div>
-                      <h3 className="font-medium text-gray-800 dark:text-gray-100 line-clamp-2">
-                        {video.title}
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
-                        {video.channel}
-                      </p>
-                      <p className="text-gray-500 dark:text-gray-500 text-xs mt-1">
-                        {video.views} • {video.posted}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex justify-between mt-4 text-gray-500 dark:text-gray-400">
-                    <button className="flex items-center space-x-1 hover:text-indigo-500 transition-colors">
-                      <ThumbsUp size={16} />
-                      <span className="text-xs">Like</span>
-                    </button>
-                    <button className="flex items-center space-x-1 hover:text-indigo-500 transition-colors">
-                      <MessageCircle size={16} />
-                      <span className="text-xs">Comment</span>
-                    </button>
-                    <button className="flex items-center space-x-1 hover:text-indigo-500 transition-colors">
-                      <Share2 size={16} />
-                      <span className="text-xs">Share</span>
-                    </button>
-                    <button className="flex items-center space-x-1 hover:text-indigo-500 transition-colors">
-                      <Bookmark size={16} />
-                      <span className="text-xs">Save</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-        </div>
-      </div>
-
       {/* Main Videos Grid */}
       <div className="px-6 py-4">
         <div className="flex items-center justify-between mb-4">
@@ -240,57 +167,7 @@ const HomeContent = () => {
           {videos
             .filter((video) => !video.trending)
             .map((video) => (
-              <div
-                key={video.id}
-                className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-gray-100 dark:border-gray-700 hover:border-indigo-200 dark:hover:border-indigo-700 group"
-              >
-                <div className="relative">
-                  <img
-                    src={video.thumbnail}
-                    alt={video.title}
-                    className="w-full h-48 object-cover"
-                  />
-                  <span className="absolute bottom-2 right-2 bg-black/70 backdrop-blur-sm text-white text-xs px-1.5 py-0.5 rounded">
-                    {video.duration}
-                  </span>
-                </div>
-                <div className="p-4">
-                  <div className="flex space-x-3">
-                    <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center">
-                      {video.avatar}
-                    </div>
-                    <div>
-                      <h3 className="font-medium text-gray-800 dark:text-gray-100 line-clamp-2">
-                        {video.title}
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
-                        {video.channel}
-                      </p>
-                      <p className="text-gray-500 dark:text-gray-500 text-xs mt-1">
-                        {video.views} • {video.posted}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex justify-between mt-4 text-gray-500 dark:text-gray-400">
-                    <button className="flex items-center space-x-1 hover:text-indigo-500 transition-colors">
-                      <ThumbsUp size={16} />
-                      <span className="text-xs">Like</span>
-                    </button>
-                    <button className="flex items-center space-x-1 hover:text-indigo-500 transition-colors">
-                      <MessageCircle size={16} />
-                      <span className="text-xs">Comment</span>
-                    </button>
-                    <button className="flex items-center space-x-1 hover:text-indigo-500 transition-colors">
-                      <Share2 size={16} />
-                      <span className="text-xs">Share</span>
-                    </button>
-                    <button className="flex items-center space-x-1 hover:text-indigo-500 transition-colors">
-                      <Bookmark size={16} />
-                      <span className="text-xs">Save</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <Video video={video} key={video.id} />
             ))}
         </div>
       </div>

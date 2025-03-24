@@ -3,7 +3,7 @@ import { Video } from "../models/Video.model.js"
 import { ApiError } from "../utils/ApiErrors.js";
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { uploadFileOnCloudinary } from "../utils/Cloudinary.js";
-
+import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 const uploadVideo = asyncHandler(async (req, res) => {
     const { title, description, duration } = req.body;
 
@@ -99,19 +99,28 @@ const deleteVideo = asyncHandler(async (req, res) => {
 })
 
 const getAllVideos = asyncHandler(async (req, res) => {
-    const { page = 1, limit = 10 } = req.query
+    const { page = 1, limit = 10 } = req.query;
+
     const options = {
         page: parseInt(page, 10),
         limit: parseInt(limit, 10),
         populate: { path: "owner", select: "userName fullName avatar" }
-    }
-    const allVideos = await Video.paginate({}, options)
-    if (!allVideos) {
-        throw new ApiError(401, "There is a problem while fetching the videos")
+    };
+
+    const allVideos = await Video.paginate({}, options);
+
+    if (!allVideos?.docs || allVideos.docs.length === 0) {
+        throw new ApiError(404, "No videos found");
     }
 
-    res.status(200, allVideos, "All videos fetched successfully")
-})
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            allVideos,
+            "Videos fetched successfully"
+        )
+    );
+});
 
 const searchVideos = asyncHandler(async (req, res) => {
     const { query, page = 1, limit = 1, sortBy, sortType, userId } = req.query;

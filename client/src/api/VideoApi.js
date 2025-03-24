@@ -36,3 +36,14 @@ export const uploadVideo = async (uploadData, onProgress) => {
         throw error.response?.data || error.message;
     }
 };
+export const retrieveVideos = async () => {
+    try {
+        const response = await axios.post(
+            `${API_URL}/videos/upload`,
+            formData
+        );
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || error.message;
+    }
+};
