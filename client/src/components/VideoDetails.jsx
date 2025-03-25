@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getVideoDetails } from "../api/VideoApi";
 import toast from "react-hot-toast";
+import Comments from "./Comments";
 
 const VideoDetails = () => {
   const { id } = useParams();
@@ -54,6 +55,9 @@ const VideoDetails = () => {
         <p className="mt-4 text-gray-600 dark:text-gray-300">
           {video.description}
         </p>
+      </div>
+      <div className="comments">
+        <Comments videoId={id} />
       </div>
     </div>
   );

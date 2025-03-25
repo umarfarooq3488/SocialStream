@@ -8,7 +8,7 @@ const router = Router();
 router.use(verifyJWT);
 
 // Define routes for comment operations
-router.route("/create").post(createComment);
+router.route("/create/:videoId").post(createComment);
 router.route("/all/:videoId").get(getAllComments);
 router.route("/update/:commentId").patch(updateComment);
 router.route("/delete/:commentId").delete(deleteComment);
