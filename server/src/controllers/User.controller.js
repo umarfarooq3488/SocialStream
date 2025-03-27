@@ -315,6 +315,51 @@ const getUserChannelDetails = asyncHandler(async (req, res) => {
     );
 })
 
+const addToWatchHistory = asyncHandler(async (req, res) => {
+    const { videoId } = req.params;
+
+    if (!videoId) {
+        throw new ApiError(400, "Video Id is required");
+    }
+
+    // Check if video already exists in watch history
+    const userHistory = await User.findOne({
+        _id: req.user._id,
+        watchHistory: videoId
+    });
+
+    if (userHistory) {
+        return res.status(200).json(
+            new ApiResponse(200, userHistory, "Video already in watch history")
+        );
+    }
+
+    // If not in history, add it
+    const updatedUser = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $addToSet: { // addToSet ensures no duplicates
+                watchHistory: videoId
+            }
+        },
+        {
+            new: true,
+            select: "watchHistory" // Only return watch history field
+        }
+    );
+
+    if (!updatedUser) {
+        throw new ApiError(404, "Failed to update watch history");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            updatedUser,
+            "Video added to watch history successfully"
+        )
+    );
+});
 const getUserWatchHistory = asyncHandler(async (req, res) => {
     const user = await User.aggregate([
         {
@@ -373,5 +418,6 @@ export {
     updateUserPassword,
     getCurrentUser,
     getUserChannelDetails,
-    getUserWatchHistory
+    getUserWatchHistory,
+    addToWatchHistory
 };

@@ -48,10 +48,30 @@ const Sidebar = () => {
   ];
 
   const libraryItems = [
-    { icon: <PlaySquare size={20} />, label: "History", notifications: 0 },
-    { icon: <Clock size={20} />, label: "Watch Later", notifications: 3 },
-    { icon: <Bookmark size={20} />, label: "Saved", notifications: 0 },
-    { icon: <ThumbsUp size={20} />, label: "Favorites", notifications: 0 },
+    {
+      icon: <PlaySquare size={20} />,
+      label: "History",
+      notifications: 0,
+      path: "/history",
+    },
+    {
+      icon: <Clock size={20} />,
+      label: "Watch Later",
+      notifications: 3,
+      path: null,
+    },
+    {
+      icon: <Bookmark size={20} />,
+      label: "Saved",
+      notifications: 0,
+      path: null,
+    },
+    {
+      icon: <ThumbsUp size={20} />,
+      label: "Favorites",
+      notifications: 0,
+      path: null,
+    },
   ];
 
   const subscriptionItems = [
@@ -162,24 +182,27 @@ const Sidebar = () => {
           )}
 
           {libraryItems.map((item, index) => (
-            <div
-              key={index}
-              className="flex items-center px-3 py-3 my-1 text-gray-700 dark:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-gray-800/50 rounded-lg cursor-pointer transition-all"
-            >
-              <div className="text-gray-500 dark:text-gray-400">
-                {item.icon}
-              </div>
+            <div>
+              <Link
+                to={item.path}
+                key={index}
+                className="flex items-center px-3 py-3 my-1 text-gray-700 dark:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-gray-800/50 rounded-lg cursor-pointer transition-all"
+              >
+                <div className="text-gray-500 dark:text-gray-400">
+                  {item.icon}
+                </div>
 
-              {expanded && (
-                <>
-                  <span className="ml-3 flex-grow">{item.label}</span>
-                  {item.notifications > 0 && (
-                    <span className="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs px-2 py-0.5 rounded-full">
-                      {item.notifications}
-                    </span>
-                  )}
-                </>
-              )}
+                {expanded && (
+                  <>
+                    <span className="ml-3 flex-grow">{item.label}</span>
+                    {item.notifications > 0 && (
+                      <span className="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs px-2 py-0.5 rounded-full">
+                        {item.notifications}
+                      </span>
+                    )}
+                  </>
+                )}
+              </Link>
             </div>
           ))}
         </div>

@@ -10,6 +10,7 @@ import ChannelDetails from "../components/ChannelDetails";
 import MainLayout from "../layouts/MainLayout";
 import UploadVideo from "../components/UploadVideo";
 import VideoDetails from "../components/VideoDetails";
+import History from "../components/History";
 
 const AppRoutes = () => {
   const { state } = useUser();
@@ -34,6 +35,7 @@ const AppRoutes = () => {
           />
           <Route path="/upload-video" element={<UploadVideo />} />
           <Route path="/video-details/:id" element={<VideoDetails />} />
+          <Route path="/history" element={<History />} />
         </Route>
       </Routes>
     </Router>

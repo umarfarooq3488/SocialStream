@@ -74,3 +74,55 @@ export const UpdateChannelDetails = async (formData) => {
         }
     }
 };
+export const addToHistory = async (videoId) => {
+    try {
+        // Get access token from localStorage
+        const token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).data.accessToken : null;
+
+        if (!token) {
+            throw new Error('Authentication token not found');
+        }
+
+        const response = await axios.patch(
+            `${API_URL}/users/add-to-history/${videoId}`, {},
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
+        return response.data;
+    } catch (error) {
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data.message);
+        } else {
+            throw new Error('Failed to update profile details');
+        }
+    }
+};
+export const getHistory = async () => {
+    try {
+        // Get access token from localStorage
+        const token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).data.accessToken : null;
+
+        if (!token) {
+            throw new Error('Authentication token not found');
+        }
+
+        const response = await axios.get(
+            `${API_URL}/users/history`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
+        return response.data;
+    } catch (error) {
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data.message);
+        } else {
+            throw new Error('Failed to update profile details');
+        }
+    }
+};

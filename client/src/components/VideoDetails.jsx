@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { getVideoDetails } from "../api/VideoApi";
 import toast from "react-hot-toast";
 import Comments from "./Comments";
+import { addToHistory } from "../api/UserApi";
 
 const VideoDetails = () => {
   const { id } = useParams();
@@ -26,13 +27,27 @@ const VideoDetails = () => {
     fetchVideoDetails();
   }, [id]);
 
+  const handleVideoPlay = async () => {
+    try {
+      const res = await addToHistory(id);
+      console.log(res);
+    } catch (error) {
+      console.log("Error! while adding video to history", error);
+    }
+  };
+
   if (loading) return <div>Loading...</div>;
   if (!video) return <div>Video not found</div>;
 
   return (
     <div className="p-6">
       <div className="w-full aspect-video rounded-xl overflow-hidden">
-        <video src={video.videoFile} controls className="w-full h-full" />
+        <video
+          onPlay={handleVideoPlay}
+          src={video.videoFile}
+          controls
+          className="w-full h-full"
+        />
       </div>
 
       <div className="mt-4">

@@ -15,7 +15,7 @@ const Video = ({ video }) => {
     <div>
       <div
         key={video._id}
-        className="bg-white cursor-pointer hover:scale-105 dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-500 border border-gray-100 dark:border-gray-700 hover:border-indigo-200 dark:hover:border-indigo-700 group"
+        className="bg-white cursor-pointer hover:scale-105 dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-500 border border-gray-100 dark:border-gray-700 hover:border-indigo-200 dark:hover:border-indigo-700"
       >
         <div className="relative">
           <img
