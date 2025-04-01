@@ -84,7 +84,7 @@ const Sidebar = () => {
 
   return (
     <aside
-      className={`h-screen ${expanded ? "w-64" : "w-[20vw]"} 
+      className={`h-screen ${expanded ? "w-64" : "w-[5vw]"} 
       bg-gradient-to-b from-gray-50 to-gray-100 
       dark:from-gray-900 dark:to-gray-950 
       shadow-lg transition-all duration-300 flex flex-col

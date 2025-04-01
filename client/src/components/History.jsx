@@ -13,8 +13,6 @@ const History = () => {
       try {
         setLoading(true);
         const response = await getHistory();
-        // Check if response has watchHistory array
-        console.log(response.data);
         setHistory(response.data || []);
       } catch (error) {
         console.error("Error while fetching user history:", error);
@@ -51,13 +49,13 @@ const History = () => {
                        focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
-          <button
+          {/* <button
             className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 
                            dark:hover:bg-red-900/20 rounded-lg transition-colors"
           >
             <Trash2 className="w-5 h-5" />
             <span>Clear History</span>
-          </button>
+          </button> */}
         </div>
       </div>
 
