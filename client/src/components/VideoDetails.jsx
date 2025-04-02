@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getVideoDetails } from "../api/VideoApi";
 import toast from "react-hot-toast";
 import Comments from "./Comments";
@@ -13,8 +13,8 @@ const VideoDetails = () => {
   useEffect(() => {
     const fetchVideoDetails = async () => {
       try {
-        console.log(id);
         const data = await getVideoDetails(id);
+        console.log(data);
         setVideo(data);
       } catch (error) {
         console.log(error);
@@ -40,8 +40,11 @@ const VideoDetails = () => {
   if (!video) return <div>Video not found</div>;
 
   return (
-    <div className="p-6">
-      <div className="w-full aspect-video rounded-xl overflow-hidden">
+    <div
+      className="p-6  bg-gradient-to-b from-gray-50 to-gray-100 
+      dark:from-gray-900 dark:to-gray-950 "
+    >
+      <div className="w-full bg-slate-100 aspect-video rounded-xl overflow-hidden">
         <video
           onPlay={handleVideoPlay}
           src={video.videoFile}
@@ -54,19 +57,21 @@ const VideoDetails = () => {
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
           {video.title}
         </h1>
-        <div className="mt-2 flex items-center">
-          <img
-            src={video.owner.avatar}
-            alt={video.owner.fullName}
-            className="w-10 h-10 rounded-full"
-          />
-          <div className="ml-3">
-            <p className="text-sm font-medium text-gray-900 dark:text-white">
-              {video.owner.fullName}
-            </p>
-            <p className="text-sm text-gray-500">{video.views} views</p>
+        <Link to={`/channel-details/${video.owner.userName}`}>
+          <div className="mt-2 flex items-center">
+            <img
+              src={video.owner.avatar}
+              alt={video.owner.fullName}
+              className="w-10 h-10 rounded-full"
+            />
+            <div className="ml-3">
+              <p className="text-sm font-medium text-gray-900 dark:text-white">
+                {video.owner.fullName}
+              </p>
+              <p className="text-sm text-gray-500">{video.views} views</p>
+            </div>
           </div>
-        </div>
+        </Link>
         <p className="mt-4 text-gray-600 dark:text-gray-300">
           {video.description}
         </p>

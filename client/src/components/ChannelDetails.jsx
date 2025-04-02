@@ -42,7 +42,7 @@ const ChannelDetails = () => {
   if (error) return null;
 
   return (
-    <div className="w-full">
+    <div className="w-full dark:bg-gray-900">
       <Toaster />
       {channelData && <UserProfile channelData={channelData} />}
     </div>
