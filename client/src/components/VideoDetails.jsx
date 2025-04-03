@@ -4,11 +4,13 @@ import { getVideoDetails } from "../api/VideoApi";
 import toast from "react-hot-toast";
 import Comments from "./Comments";
 import { addToHistory } from "../api/UserApi";
+import Like from "./Like";
 
 const VideoDetails = () => {
   const { id } = useParams();
   const [video, setVideo] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {
     const fetchVideoDetails = async () => {
@@ -36,6 +38,18 @@ const VideoDetails = () => {
     }
   };
 
+  const handleSubscribe = async () => {
+    try {
+      // TODO: Add API call to toggle subscription
+      setIsSubscribed((prev) => !prev);
+      toast.success(
+        isSubscribed ? "Unsubscribed successfully" : "Subscribed successfully"
+      );
+    } catch (error) {
+      toast.error("Failed to update subscription");
+    }
+  };
+
   if (loading) return <div>Loading...</div>;
   if (!video) return <div>Video not found</div>;
 
@@ -57,21 +71,47 @@ const VideoDetails = () => {
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
           {video.title}
         </h1>
-        <Link to={`/channel-details/${video.owner.userName}`}>
-          <div className="mt-2 flex items-center">
-            <img
-              src={video.owner.avatar}
-              alt={video.owner.fullName}
-              className="w-10 h-10 rounded-full"
-            />
-            <div className="ml-3">
-              <p className="text-sm font-medium text-gray-900 dark:text-white">
-                {video.owner.fullName}
-              </p>
-              <p className="text-sm text-gray-500">{video.views} views</p>
+
+        <div className="flex items-center justify-between mt-4">
+          <Link to={`/channel-details/${video.owner.userName}`}>
+            <div className="flex items-center">
+              <img
+                src={video.owner.avatar}
+                alt={video.owner.fullName}
+                className="w-10 h-10 rounded-full"
+              />
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-900 dark:text-white">
+                  {video.owner.fullName}
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {video.views} views
+                </p>
+              </div>
             </div>
+          </Link>
+
+          <div className="flex items-center gap-4">
+            <Like
+              videoId={video._id}
+              initialLikes={video.likes}
+              initialDislikes={video.dislikes}
+            />
+
+            <button
+              onClick={handleSubscribe}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-colors
+                ${
+                  isSubscribed
+                    ? "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600"
+                    : "bg-red-600 text-white hover:bg-red-700"
+                }`}
+            >
+              {isSubscribed ? "Subscribed" : "Subscribe"}
+            </button>
           </div>
-        </Link>
+        </div>
+
         <p className="mt-4 text-gray-600 dark:text-gray-300">
           {video.description}
         </p>

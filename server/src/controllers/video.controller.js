@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import asyncHandler from "../utils/asyncHandler.js"
 import { Video } from "../models/Video.model.js"
 import { ApiError } from "../utils/ApiErrors.js";
@@ -39,21 +40,84 @@ const uploadVideo = asyncHandler(async (req, res) => {
 
 const getVideoDetails = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    if (!id) {
-        throw new ApiError(401, "video id is not available")
-    }
-    const video = await Video.findById(id).populate("owner", "userName fullName avatar");
-    if (!video) {
-        throw new ApiError(401, "Couldn't fetch the video with the given id")
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+        throw new ApiError(401, "Video id is not available");
     }
 
-    video.views += 1;
-    await video.save()
+    const video = await Video.aggregate([
+        {
+            $match: {
+                _id: new mongoose.Types.ObjectId(id)
+            }
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                    {
+                        $project: {
+                            fullName: 1,
+                            userName: 1,
+                            avatar: 1
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $lookup: {
+                from: "likes",
+                localField: "_id",
+                foreignField: "video",
+                as: "likes"
+            }
+        },
+        {
+            $addFields: {
+                owner: { $first: "$owner" },
+                likesCount: { $size: "$likes" },
+                isLiked: {
+                    $in: [req.user._id, "$likes.user"]
+                }
+            }
+        },
+        {
+            $project: {
+                title: 1,
+                description: 1,
+                duration: 1,
+                videoFile: 1,
+                views: 1,
+                thumbnail: 1,
+                likesCount: 1,
+                isLiked: 1,
+                owner: 1,
+                createdAt: 1
+            }
+        }
+    ]);
 
-    res.status(200).json(
-        new ApiResponse(200, video, "Video details are fetched successfully")
-    )
-})
+    if (!video?.length) {
+        throw new ApiError(404, "Couldn't fetch the video with the given id");
+    }
+
+    // Update views count separately since we can't do it in aggregation
+    await Video.findByIdAndUpdate(id, {
+        $inc: { views: 1 }
+    });
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            video[0],
+            "Video details fetched successfully"
+        )
+    );
+});
 
 const updateVideoDetails = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
